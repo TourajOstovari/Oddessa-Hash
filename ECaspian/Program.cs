@@ -11,7 +11,7 @@ namespace ConsoleApp1
         private static byte[] v1;
         private static void Main(string[] args)
         {
-            First:
+        First:
             Console.Title = "ODESSA HASH FUNCTION DEVELOPED BY MR. TOURAJ OSTOVARI";
             Console.ForegroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Green;
@@ -58,10 +58,8 @@ namespace ConsoleApp1
             BitArray C = new BitArray(1024, true);
             BitArray D = new BitArray(1024, true);
 
-            BitArray A_ = new BitArray(256, false);
-            BitArray B_ = new BitArray(256, false);
-            BitArray C_ = new BitArray(256, false);
-            BitArray D_ = new BitArray(256, false);
+            BitArray A_ = new BitArray(512, false);
+            BitArray B_ = new BitArray(512, false);
 
             int Index = 0;
             bool A_Time = true;
@@ -279,10 +277,10 @@ namespace ConsoleApp1
                     Sums += temp[i];
                 }
                 Console.WriteLine((long)Math.Log10(Math.Pow(Sums, shift)) + "\t" + Sums);
-                for (int i = 1; i <= (7+(long)Math.Log10(Math.Pow(Sums,shift))); i++)
+                for (int i = 1; i <= (7 + (long)Math.Log10(Math.Pow(Sums, shift))); i++)
                 {
                     Bit.lst.Length = 1024;
-                    Bit.BEL((Sums * i * (long)Math.Log10(Math.Pow(Sums, shift)) ), (Sums + shift), 1023);
+                    Bit.BEL((Sums * i * (long)Math.Log10(Math.Pow(Sums, shift))), (Sums + shift), 1023);
                     A = A.And(Bit.lst).LeftShift(2);
                     A = B.Xor(A).RightShift(1);
                     A = C.Xor(A);
@@ -306,60 +304,59 @@ namespace ConsoleApp1
                 int temp = 0;
                 for (int i = 0; i < A.Length; i++)
                 {
-                    if (i <= 255 && i >= 0)
+                    if (i <= 511 && i >= 0)
                     {
                         A_.Set(temp++, A.Get(i));
-                        if (temp == 256)
+                        if (temp == 512)
                             temp = 0;
                     }
-                    if (i <= 511 && i >= 256)
+                    if (i <= 1023 && i >= 512)
                     {
                         B_.Set(temp++, A.Get(i));
-                        if (temp == 256)
-                            temp = 0;
-                    }
-                    if (i <= 767 && i >= 512)
-                    {
-                        C_.Set(temp++, A.Get(i));
-                        if (temp == 256)
-                            temp = 0;
-                    }
-                    if (i <= 1023 && i >= 768)
-                    {
-                        D_.Set(temp++, A.Get(i));
                     }
 
                 }
             }
             {
-                Bit.lst.Length = 256;
-                Bit.BEL((Sums * shift * (int)Math.Log10(Math.Pow(Sums, shift)) ), (Sums + shift), 255);
-                A_ = A_.Xor(B_);
-                C_ = C_.Xor(D_);
-                A_ = A_.And(Bit.lst).Not();
-                C_ = C_.And(Bit.lst).Not();
-                A_ = A_.Xor(C_);
+                for (int i = 0; i < 5; i++)
+                {
+                    BitArray temp = new BitArray(512, false);
+                    Bit.lst.Length = 512;
+                    Bit.BEL((Sums * shift * (int)Math.Log10(Math.Pow(Sums, shift)) * i), (Sums + shift), 511);
+                    A_ = A_.Xor(B_);
+                    A_ = A_.And(Bit.lst).Not();
+                    B_ = B_.Xor(Bit.lst);
+                    temp = (BitArray)B_.Clone();
+                    B_ = (BitArray)A_.Clone();
+                    A_ = (BitArray)temp.Clone();
+                }
+
 
             }
 
             string result = "";
+            string temp_ = "";
             Console.WriteLine($"Hash:");
             for (int i = 0; i < A_.Count; i++)
             {
                 if (A_.Get(i))
                 {
                     result += "1";
+                    temp_ += "1";
                 }
                 else
                 {
                     result += "0";
+                    temp_ += "0";
                 }
                 if (result.Length == 4)
                 {
+
                     Console.Write((Convert.ToInt32(result, 2)).ToString("X"));
                     result = "";
                 }
             }
+            Console.WriteLine("\n" + temp_);
             st.Stop();
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("\nStopwatch:" + st.Elapsed);
