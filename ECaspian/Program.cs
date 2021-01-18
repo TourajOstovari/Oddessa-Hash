@@ -52,7 +52,7 @@ namespace ConsoleApp1
             byte shift = 1;
             int alpha = 1023;
 
-            st.Start();
+            
             BitArray A = new BitArray(1024, true);
             BitArray B = new BitArray(1024, true);
             BitArray C = new BitArray(1024, true);
@@ -267,14 +267,15 @@ namespace ConsoleApp1
                 }
                 if (Final_Counter == 12) break;
             }
-            long Sums = 0;
+            st.Start();
+            long Sums = 1;
             {
                 System.Security.Cryptography.SHA256 md5 = System.Security.Cryptography.SHA256.Create();
                 byte[] temp = md5.ComputeHash(v1);
 
                 for (int i = 0; i < temp.Length; i++)
                 {
-                    Sums += temp[i];
+                    Sums *= temp[i];
                 }
                 Console.WriteLine((long)Math.Log10(Math.Pow(Sums, shift)) + "\t" + Sums);
                 for (int i = 1; i <= (7 + (long)Math.Log10(Math.Pow(Sums, shift))); i++)
