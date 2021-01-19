@@ -351,7 +351,7 @@ namespace ConsoleApp1
                 {
                     Sums += temp[i];
                 }
-                SBOX(Sums, shift);
+                
             }
             {
                 for (int i = 1; i <= 5; i++)
@@ -393,7 +393,7 @@ namespace ConsoleApp1
                     Console.Write(result);
                     temp_ += result;
                     result = "";
-                    if (Indexer == 255) Indexer = 0;
+                    //if (Indexer == 255) Indexer = 0;
                 }
             }
 
